@@ -7,8 +7,10 @@ import { fetchEvents } from "../../util/http.js";
 
 export default function NewEventsSection() {
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["events"],
-    queryFn: fetchEvents, // should be async function returning data and thowing error if request failed
+    queryKey: ["events", {max: 3}],
+    queryFn: ({signal, queryKey}) => fetchEvents({signal, ...queryKey[1]}),
+    // fetchEvents({signal, max: 3}), // to fetch 3 latest events
+     // should be async function returning data and thowing error if request failed
     staleTime: 5000, // in ms, how often send a new request if component is often rerendered, to avoid sending unnecessary requests
    // gcTime: 30000, //in ms, how long lives the casch, default 5 minutes
   });
